@@ -32,8 +32,8 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/messages", messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
-  const indexPath = path.join(__dirname, "../frontend", "dist", "index.html");
+  app.use(express.static(path.join(__dirname, "../client/dist")));
+  const indexPath = path.join(__dirname, "../client", "dist", "index.html");
   if (fs.existsSync(indexPath)) {
     app.get("*", (req, res) => {
       res.sendFile(indexPath);
