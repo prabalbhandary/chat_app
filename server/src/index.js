@@ -4,11 +4,10 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import "colors";
 import morgan from "morgan";
-
 import path from "path";
+import fs from "fs";
 
 import { connectDB } from "./lib/db.js";
-
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
@@ -34,10 +33,14 @@ app.use("/api/v1/messages", messageRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
+  const indexPath = path.join(__dirname, "../frontend", "dist", "index.html");
+  if (fs.existsSync(indexPath)) {
+    app.get("*", (req, res) => {
+      res.sendFile(indexPath);
+    });
+  } else {
+    console.error("Frontend build directory not found");
+  }
 }
 
 server.listen(PORT, () => {
